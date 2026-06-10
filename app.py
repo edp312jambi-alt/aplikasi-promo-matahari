@@ -10,41 +10,33 @@ st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud
  
 DB_URI = "postgresql://postgres.pfesinwsletypxslrjhc:Jambi312345@://supabase.com"
  
-@st.cache_data(ttl=600)  # Mengunci cache selama 10 menit
+# Cache dimatikan sementara agar error lama terbuang
 def muat_data():
     engine = create_engine(DB_URI)
-    
-    # PERBAIKAN: Membaca data menggunakan object text() dari SQLAlchemy
     query = text('SELECT * FROM "Matahari 312 Promotion";')
-    
-    # Menggunakan connection context manager agar pengambilan data lebih stabil
     with engine.connect() as conn:
         df = pd.read_sql(query, conn)
     return df
  
 try:
-    # Memuat data asli dari database
+    # Memuat data segar langsung dari cloud database
     data_mentah = muat_data()
     
-    # PERBAIKAN TOTAL: Bersihkan semua string kosong ("") atau spasi di dataframe menjadi None/NaN
+    # Konversi seluruh isi kolom menjadi teks biasa demi keamanan tipe data
     data = data_mentah.copy()
     for col in data.columns:
-        if data[col].dtype == 'object':
-            data[col] = data[col].astype(str).str.strip().replace({"": None, "nan": None, "None": None})
+        data[col] = data[col].astype(str).str.strip().replace({"": None, "nan": None, "None": None})
     
-    # Membuat kotak pencarian interaktif untuk publik
+    # Kotak pencarian interaktif
     pencarian = st.text_input("🔍 Cari berdasarkan Acara, Departemen, atau Kata Kunci Lain:")
     if pencarian:
-        # Memastikan pencarian aman dari data kosong
         mask = data.astype(str).fillna('').apply(lambda x: x.str.contains(pencarian, case=False)).any(axis=1)
         data_disaring = data[mask]
     else:
         data_disaring = data
  
-    # Menampilkan ringkasan jumlah data
+    # Tampilkan jumlah data dan tabel
     st.metric(label="Total Data Ditemukan", value=f"{len(data_disaring):,}")
-    
-    # Menampilkan tabel data utama yang bisa di-scroll dan disortir oleh publik
     st.dataframe(data_disaring, use_container_width=True)
  
 except Exception as e:
