@@ -10,7 +10,7 @@ st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud
  
 # GANTI STRING DI BAWAH INI DENGAN CONNECTION STRING DARI DASHBOARD SUPABASE ANDA
 # Format yang benar biasanya: postgresql://postgres.[ID_PROYEK]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
-DB_URI = "postgresql://postgres.MASUKKAN_ID_PROYEK_ANDA:Jambi312345@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
+DB_URI = "postgresql://postgres.Jambi312345@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
  
 @st.cache_data(ttl=600)  # Mengunci cache selama 10 menit agar loading data publik sangat cepat
 def muat_data():
