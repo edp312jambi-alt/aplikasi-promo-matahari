@@ -8,32 +8,35 @@ st.set_page_config(layout="wide", page_title="Database Promo Matahari")
 st.title("📊 Portal Data Promosi Matahari")
 st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud database baru.")
 
-# PERBAIKAN 1: Mengubah nama tabel dengan encoding spasi URL (%20) yang benar
+# Menggunakan endpoint REST API REST Supabase
 API_URL = "https://supabase.co"
 
-# PERBAIKAN 2: Gunakan Publishable Key (sb_publishable_...) yang Anda salin secara utuh dan lengkap
-API_KEY = "sb_publishable_1cMUgWrzNj9EULAerQDiA_dZdGi" # <-- Pastikan kode panjang Anda tertempel utuh di sini
+# Pastikan untuk menempelkan Publishable Key asli Anda yang sangat panjang di sini
+API_KEY = "sb_publishable_1cMUgWrzNj9EULAerQDiA_dZdGi" 
 
+# NAMA FUNGSI DIUBAH MENJADI 'ambil_data_terbaru' UNTUK MEMAKSA CACHE TERBUANG
 @st.cache_data(ttl=600)
-def muat_data_api():
+def ambil_data_terbaru():
     headers = {
         "apikey": API_KEY,
         "Authorization": f"Bearer {API_KEY}"
     }
     
-    respons = requests.get(API_URL, headers=headers)
+    # Menambahkan parameter select=* secara eksplisit agar Supabase memberikan response data yang valid
+    params = {"select": "*"}
     
-    # PERBAIKAN 3: Jika berhasil (Status 200), langsung parsing JSON
+    respons = requests.get(API_URL, headers=headers, params=params)
+    
     if respons.status_code == 200:
         return pd.DataFrame(respons.json())
     else:
-        # Jika gagal, tampilkan pesan asli dari Supabase agar mudah dilacak
-        st.error(f"⚠️ Kode Respons Server: {respons.status_code}")
+        st.error(f"⚠️ Kode HTTP Server: {respons.status_code}")
         st.error(f"💬 Detail Masalah: {respons.text}")
         st.stop()
 
 try:
-    data_mentah = muat_data_api()
+    # Memanggil fungsi baru pembongkar cache
+    data_mentah = ambil_data_terbaru()
     
     if not data_mentah.empty:
         if 'id' in data_mentah.columns:
