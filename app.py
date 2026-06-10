@@ -1,37 +1,45 @@
 import streamlit as st
 import pandas as pd
-from sqlalchemy import create_engine, text
+import requests
 
 # Mengatur tampilan halaman web agar melebar otomatis
 st.set_page_config(layout="wide", page_title="Database Promo Matahari")
  
 st.title("📊 Portal Data Promosi Matahari")
 st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud database baru.")
- 
-DB_URI = "postgresql://postgres.smiepesiidolrcztrboq:Matahari3123450@://supabase.com"
- 
+
+# Menggunakan endpoint REST API REST Supabase (Lebih aman dari error driver database)
+API_URL = "https://supabase.co"
+
+# PENTING: Gunakan Publishable Key (sb_publishable_...) yang Anda salin dari dashboard sebelumnya
+API_KEY = "sb_publishable_1cMUgWrzNj9EULAerQDiA_dZdGi" # <-- Pastikan teks ini sesuai dengan key Anda
+
 @st.cache_data(ttl=600)  # Mengunci cache selama 10 menit
-def muat_data():
-    engine = create_engine(DB_URI)
-    query = text('SELECT "ACARA", "FORM DATE", "TO DATE", "DEPT", "WORLD" FROM "Matahari 312 Promotion";')
+def muat_data_api():
+    headers = {
+        "apikey": API_KEY,
+        "Authorization": f"Bearer {API_KEY}"
+    }
     
-    with engine.connect() as conn:
-        # Eksekusi kueri secara manual tanpa melibatkan automap dari Pandas
-        result = conn.execute(query)
+    # Meminta data mentah format JSON langsung lewat jaringan HTTP web
+    respons = requests.get(API_URL, headers=headers)
+    
+    if respons.status_code == 200:
+        json_data = respons.json()
+        df = pd.DataFrame(json_data)
         
-        # Iterasi manual baris demi baris dan memaksa semua nilai diubah menjadi text/string biasa
-        baris_bersih = []
-        for row in result:
-            baris_bersih.append([str(item).strip() if item is not None else "" for item in row])
+        # Buang kolom 'id' bawaan jika ada agar tidak mengganggu tampilan
+        if 'id' in df.columns:
+            df = df.drop(columns=['id'])
             
-        # Bentuk tabel DataFrame secara manual menggunakan data mentah string
-        kolom = ["ACARA", "FORM DATE", "TO DATE", "DEPT", "WORLD"]
-        df = pd.DataFrame(baris_bersih, columns=kolom)
-    return df
- 
+        return df
+    else:
+        raise Exception(f"Error API Supabase: {respons.status_code} - {respons.text}")
+
 try:
-    # Memuat data yang sudah bersih total dari tipe data numerik
-    data = muat_data()
+    # Memuat data murni tanpa melibatkan engine SQL sama sekali
+    data_mentah = muat_data_api()
+    data = data_mentah.fillna('').astype(str)
     
     # Membuat kotak pencarian interaktif untuk publik
     pencarian = st.text_input("🔍 Cari berdasarkan Acara, Departemen, atau Kata Kunci Lain:")
