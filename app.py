@@ -9,7 +9,7 @@ st.title("📊 Portal Data Promosi Matahari")
 st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud database.")
  
 # PASTE KODE KONEKSI SUPABASE DARI NOTEPAD ANDA DI SINI
-DB_URI = "postgresql://postgres:Jambi312345@db.pfesinwsletypxslrjhc.supabase.co:5432/postgres"
+DB_URI = "postgresql://postgres:Jambi312345@://supabase.com"
  
 @st.cache_data(ttl=600)  # Mengunci cache selama 10 minut agar loading data publik sangat cepat
 def muat_data():
