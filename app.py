@@ -11,8 +11,8 @@ st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud
 # Menggunakan endpoint REST API REST Supabase (Lebih aman dari error driver database)
 API_URL = "https://supabase.co"
 
-# PENTING: Gunakan Publishable Key (sb_publishable_...) yang Anda salin dari dashboard sebelumnya
-API_KEY = "sb_publishable_1cMUgWrzNj9EULAerQDiA_dZdGi" # <-- Pastikan teks ini sesuai dengan key Anda
+# PASTE KUNCI ASLI ANDA SECARA LENGKAP DI SINI (JANGAN SENSOR ATAU DIPOTONG)
+API_KEY = "sb_publishable_1cMUgWrzNj9EULAerQDiA_dZdGiAM2NzI3cmJvcSI..."
 
 @st.cache_data(ttl=600)  # Mengunci cache selama 10 menit
 def muat_data_api():
