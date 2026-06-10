@@ -10,7 +10,7 @@ st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud
 
 # 2. Konfigurasi Endpoint Proyek Supabase Baru Anda
 SUPABASE_URL = "https://smiepesiidolrcztrboq.supabase.co"
-SUPABASE_KEY = "smiepesiidolrcztrboq"  # <-- Ganti dengan anon key baru Anda
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtaWVwZXNpaWRvbHJjenRyYm9xIi..." 
 
 # 3. Fungsi Pengambil Data Otomatis (Pagination)
 @st.cache_data(ttl=600)
