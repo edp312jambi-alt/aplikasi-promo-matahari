@@ -8,13 +8,14 @@ st.set_page_config(layout="wide", page_title="Database Promo Matahari")
 st.title("📊 Portal Data Promosi Matahari")
 st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud database.")
  
-# PASTE KODE KONEKSI SUPABASE DARI NOTEPAD ANDA DI SINI
-DB_URI = "postgresql://postgres:Jambi312345@://supabase.com"
+# GANTI STRING DI BAWAH INI DENGAN CONNECTION STRING DARI DASHBOARD SUPABASE ANDA
+# Format yang benar biasanya: postgresql://postgres.[ID_PROYEK]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
+DB_URI = "postgresql://postgres.MASUKKAN_ID_PROYEK_ANDA:Jambi312345@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
  
-@st.cache_data(ttl=600)  # Mengunci cache selama 10 minut agar loading data publik sangat cepat
+@st.cache_data(ttl=600)  # Mengunci cache selama 10 menit agar loading data publik sangat cepat
 def muat_data():
     engine = create_engine(DB_URI)
-    # Menarik data dari tabel Supabase Anda (Nama tabel sesuai tab browser Anda sebelumnya)
+    # Menarik data dari tabel Supabase Anda
     query = 'SELECT * FROM "Matahari 312 Promotion";'
     df = pd.read_sql(query, engine)
     return df
@@ -38,3 +39,4 @@ try:
  
 except Exception as e:
     st.error(f"Gagal memuat data dari cloud database: {e}")
+
