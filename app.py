@@ -22,10 +22,14 @@ def muat_data():
 try:
     data = muat_data()
     
+    # PERBAIKAN: Mengubah string kosong atau spasi saja menjadi nilai kosong (NaN) agar tidak memicu error int()
+    data = data.replace(r'^\s*$', None, regex=True)
+    
     # Membuat kotak pencarian interaktif untuk publik
     pencarian = st.text_input("🔍 Cari berdasarkan Acara, Departemen, atau Kata Kunci Lain:")
     if pencarian:
-        mask = data.astype(str).apply(lambda x: x.str.contains(pencarian, case=False)).any(axis=1)
+        # Memastikan semua data dikonversi ke string dengan aman sebelum dicari
+        mask = data.astype(str).fillna('').apply(lambda x: x.str.contains(pencarian, case=False)).any(axis=1)
         data_disaring = data[mask]
     else:
         data_disaring = data
