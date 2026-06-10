@@ -7,7 +7,6 @@ st.set_page_config(layout="wide", page_title="Database Promo Matahari")
  
 st.title("📊 Portal Data Promosi Matahari")
 st.write("Akses publik cepat untuk melihat ratusan ribu data langsung dari cloud database.")
- 
 # GANTI STRING DI BAWAH INI DENGAN CONNECTION STRING DARI DASHBOARD SUPABASE ANDA
 # Format yang benar biasanya: postgresql://postgres.[ID_PROYEK]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
 DB_URI = "postgresql://postgres.pfesinwsletypxslrjhc:Jambi312345@://supabase.com"
